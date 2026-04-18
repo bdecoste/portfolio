@@ -1,1 +1,1 @@
-[View Portfolio](./portfolio.html) 
+[View Portfolio](https://bdecoste.github.io/portfolio/) 
