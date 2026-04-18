@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bill DeCoste — Cloud Native Engineer</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Neue+Haas+Grotesk+Display+Pro:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0a0a0a;
+    --paper: #f5f0e8;
+    --accent: #c8401a;
+    --accent2: #1a5cc8;
+    --muted: #6b6557;
+    --rule: #d4cec3;
+    --tag-bg: #e8e2d6;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'DM Mono', 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.6;
+  }
+
+  /* ── HEADER ── */
+  header {
+    border-bottom: 1px solid var(--ink);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    background: var(--paper);
+    z-index: 100;
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: stretch;
+    height: 52px;
+  }
+
+  .header-name {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: 20px;
+    font-style: italic;
+    letter-spacing: -0.02em;
+    padding: 0 28px;
+    display: flex;
+    align-items: center;
+    border-right: 1px solid var(--ink);
+    flex-shrink: 0;
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 0 20px;
+    flex: 1;
+  }
+
+  nav a {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 0 14px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    transition: color 0.15s;
+  }
+  nav a:hover { color: var(--ink); }
+
+  .header-contact {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    padding: 0 28px;
+    border-left: 1px solid var(--ink);
+    gap: 16px;
+  }
+  .header-contact a {
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .header-contact a:hover { color: var(--accent); }
+
+  /* ── HERO ── */
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 88vh;
+    border-bottom: 1px solid var(--ink);
+  }
+
+  .hero-left {
+    padding: 80px 64px 80px 64px;
+    border-right: 1px solid var(--ink);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.1s forwards;
+  }
+
+  .hero-title {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: clamp(56px, 7vw, 96px);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.2s forwards;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-summary {
+    margin-top: 48px;
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--muted);
+    max-width: 420px;
+    font-family: 'DM Mono', monospace;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.35s forwards;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 40px;
+    margin-top: 56px;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.45s forwards;
+  }
+
+  .stat-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 42px;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: var(--ink);
+  }
+  .stat-label {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  .hero-right {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Decorative grid pattern */
+  .hero-right::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--rule) 1px, transparent 1px),
+      linear-gradient(90deg, var(--rule) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.5;
+  }
+
+  .hero-diagram {
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    animation: fadeIn 1s 0.6s forwards;
+  }
+
+  /* ── SKILLS BAND ── */
+  .skills-band {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--ink);
+    overflow: hidden;
+    height: 44px;
+  }
+
+  .skills-label {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--paper);
+    background: var(--ink);
+    padding: 0 20px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  .skills-scroll {
+    display: flex;
+    gap: 0;
+    animation: scrollLeft 28s linear infinite;
+    white-space: nowrap;
+  }
+
+  .skills-scroll span {
+    padding: 0 24px;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-right: 1px solid var(--rule);
+    height: 44px;
+    display: flex;
+    align-items: center;
+  }
+
+  .skills-scroll span.accent { color: var(--accent); font-weight: 500; }
+
+  /* ── EXPERIENCE ── */
+  .experience {
+    border-bottom: 1px solid var(--ink);
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--ink);
+    height: 48px;
+    padding: 0 64px;
+  }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .section-count {
+    margin-left: auto;
+    font-family: 'DM Serif Display', serif;
+    font-size: 13px;
+    color: var(--rule);
+  }
+
+  .job {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    border-bottom: 1px solid var(--rule);
+    transition: background 0.2s;
+  }
+  .job:last-child { border-bottom: none; }
+  .job:hover { background: rgba(200, 64, 26, 0.03); }
+
+  .job-meta {
+    padding: 36px 48px 36px 64px;
+    border-right: 1px solid var(--rule);
+  }
+
+  .job-company {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+
+  .job-tenure {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 8px;
+  }
+
+  .job-badge {
+    display: inline-block;
+    margin-top: 14px;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--tag-bg);
+    color: var(--muted);
+    padding: 3px 10px;
+    border-radius: 2px;
+  }
+  .job-badge.red {
+    background: rgba(200, 64, 26, 0.1);
+    color: var(--accent);
+  }
+
+  .job-content {
+    padding: 36px 64px 36px 48px;
+  }
+
+  .job-title {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+    font-weight: 500;
+  }
+
+  .job-bullets {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .job-bullets li {
+    font-size: 13px;
+    color: var(--muted);
+    padding-left: 16px;
+    position: relative;
+    line-height: 1.6;
+  }
+
+  .job-bullets li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--rule);
+  }
+
+  .job-bullets li strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  /* ── HIGHLIGHT ── */
+  .highlight-strip {
+    background: var(--ink);
+    color: var(--paper);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    border-bottom: 1px solid var(--ink);
+  }
+
+  .highlight-cell {
+    padding: 56px 48px;
+    border-right: 1px solid rgba(245,240,232,0.15);
+  }
+  .highlight-cell:last-child { border-right: none; }
+
+  .highlight-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 64px;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--paper);
+    margin-bottom: 8px;
+  }
+  .highlight-num span { color: var(--accent); }
+
+  .highlight-desc {
+    font-size: 12px;
+    color: rgba(245,240,232,0.55);
+    line-height: 1.6;
+    margin-top: 10px;
+    max-width: 220px;
+  }
+
+  .highlight-tag {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.4);
+    margin-bottom: 4px;
+  }
+
+  /* ── TECH GRID ── */
+  .tech-section {
+    border-bottom: 1px solid var(--ink);
+  }
+
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--rule);
+  }
+
+  .tech-cell {
+    padding: 28px 32px;
+    border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    transition: background 0.2s;
+  }
+  .tech-cell:hover { background: rgba(200,64,26,0.04); }
+  .tech-cell:nth-child(4n) { border-right: none; }
+
+  .tech-category {
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .tech-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 17px;
+    letter-spacing: -0.01em;
+  }
+
+  .tech-sub {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+
+  /* ── EDUCATION ── */
+  .education {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid var(--ink);
+  }
+
+  .edu-cell {
+    padding: 56px 64px;
+    border-right: 1px solid var(--rule);
+  }
+  .edu-cell:last-child { border-right: none; }
+
+  .edu-degree {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+
+  .edu-school {
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .edu-note {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    display: flex;
+    align-items: center;
+    padding: 0 64px;
+    height: 56px;
+    border-top: 1px solid var(--ink);
+    justify-content: space-between;
+  }
+
+  .footer-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 14px;
+    font-style: italic;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 28px;
+  }
+  .footer-links a {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .footer-links a:hover { color: var(--accent); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes scrollLeft {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* ── SVG DIAGRAM ── */
+  .k8s-diagram {
+    width: 320px;
+    height: 320px;
+  }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+    .job { grid-template-columns: 1fr; }
+    .job-meta { border-right: none; border-bottom: 1px solid var(--rule); padding: 28px 32px; }
+    .job-content { padding: 28px 32px; }
+    .section-header { padding: 0 32px; }
+    .highlight-strip { grid-template-columns: 1fr; }
+    .highlight-cell { border-right: none; border-bottom: 1px solid rgba(245,240,232,0.15); }
+    .tech-grid { grid-template-columns: repeat(2, 1fr); }
+    .tech-cell:nth-child(2n) { border-right: none; }
+    .education { grid-template-columns: 1fr; }
+    .edu-cell { border-right: none; border-bottom: 1px solid var(--rule); }
+    .hero-left { padding: 48px 32px; }
+    footer { padding: 0 32px; flex-direction: column; height: auto; padding: 20px 32px; gap: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="header-inner">
+    <div class="header-name">Bill DeCoste</div>
+    <nav>
+      <a href="#experience">Experience</a>
+      <a href="#technology">Technology</a>
+      <a href="#education">Education</a>
+    </nav>
+    <div class="header-contact">
+      <a href="mailto:bdecoste@gmail.com">bdecoste@gmail.com</a>
+      <a href="https://linkedin.com/in/bill-decoste-6b6ba8" target="_blank">LinkedIn</a>
+      <a href="tel:9782040920">978-204-0920</a>
+    </div>
+  </div>
+</header>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-left">
+    <div>
+      <p class="hero-eyebrow">San Diego, CA — Cloud Native Engineer</p>
+      <h1 class="hero-title">30 Years.<br><em>One</em><br>Obsession.</h1>
+      <p class="hero-summary">
+        Pre &amp; post-sales field engineering combined with core software engineering. 
+        Primary 10+ year focus on Kubernetes and cloud native technologies — 
+        Cilium, Istio, Envoy, and the full service mesh stack. OSS contributor. 
+        Ranked #1 in global Red Hat sales achievement in FY2015.
+      </p>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num">30+</div>
+        <div class="stat-label">Years experience</div>
+      </div>
+      <div>
+        <div class="stat-num">~60</div>
+        <div class="stat-label">Customers closed</div>
+      </div>
+      <div>
+        <div class="stat-num">#1</div>
+        <div class="stat-label">Red Hat Global Sales '15</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <svg class="k8s-diagram hero-diagram" viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Outer ring -->
+      <circle cx="160" cy="160" r="130" stroke="#d4cec3" stroke-width="1" stroke-dasharray="4 4"/>
+      <!-- Middle ring -->
+      <circle cx="160" cy="160" r="88" stroke="#d4cec3" stroke-width="1"/>
+      <!-- Center -->
+      <circle cx="160" cy="160" r="36" fill="#0a0a0a"/>
+      <text x="160" y="155" font-family="'DM Serif Display', serif" font-size="10" fill="#f5f0e8" text-anchor="middle" font-style="italic">Kubernetes</text>
+      <text x="160" y="168" font-family="'DM Mono', monospace" font-size="8" fill="rgba(245,240,232,0.5)" text-anchor="middle">core</text>
+
+      <!-- Orbital nodes — inner -->
+      <!-- Istio -->
+      <circle cx="160" cy="72" r="22" fill="#f5f0e8" stroke="#0a0a0a" stroke-width="1"/>
+      <text x="160" y="69" font-family="'DM Mono', monospace" font-size="8" fill="#0a0a0a" text-anchor="middle" font-weight="500">Istio</text>
+      <text x="160" y="80" font-family="'DM Mono', monospace" font-size="7" fill="#6b6557" text-anchor="middle">mesh</text>
+
+      <!-- Cilium -->
+      <circle cx="248" cy="160" r="22" fill="#f5f0e8" stroke="#0a0a0a" stroke-width="1"/>
+      <text x="248" y="157" font-family="'DM Mono', monospace" font-size="8" fill="#0a0a0a" text-anchor="middle" font-weight="500">Cilium</text>
+      <text x="248" y="168" font-family="'DM Mono', monospace" font-size="7" fill="#6b6557" text-anchor="middle">CNI</text>
+
+      <!-- Envoy -->
+      <circle cx="160" cy="248" r="22" fill="#f5f0e8" stroke="#0a0a0a" stroke-width="1"/>
+      <text x="160" y="245" font-family="'DM Mono', monospace" font-size="8" fill="#0a0a0a" text-anchor="middle" font-weight="500">Envoy</text>
+      <text x="160" y="256" font-family="'DM Mono', monospace" font-size="7" fill="#6b6557" text-anchor="middle">proxy</text>
+
+      <!-- vCluster -->
+      <circle cx="72" cy="160" r="22" fill="#f5f0e8" stroke="#0a0a0a" stroke-width="1"/>
+      <text x="72" y="157" font-family="'DM Mono', monospace" font-size="7.5" fill="#0a0a0a" text-anchor="middle" font-weight="500">vCluster</text>
+      <text x="72" y="168" font-family="'DM Mono', monospace" font-size="7" fill="#6b6557" text-anchor="middle">virt</text>
+
+      <!-- Outer orbital nodes -->
+      <!-- EKS -->
+      <circle cx="246" cy="76" r="16" fill="rgba(200,64,26,0.1)" stroke="#c8401a" stroke-width="0.8"/>
+      <text x="246" y="79" font-family="'DM Mono', monospace" font-size="7.5" fill="#c8401a" text-anchor="middle" font-weight="500">EKS</text>
+
+      <!-- GKE -->
+      <circle cx="76" cy="76" r="16" fill="rgba(200,64,26,0.1)" stroke="#c8401a" stroke-width="0.8"/>
+      <text x="76" y="79" font-family="'DM Mono', monospace" font-size="7.5" fill="#c8401a" text-anchor="middle" font-weight="500">GKE</text>
+
+      <!-- AKS -->
+      <circle cx="76" cy="244" r="16" fill="rgba(200,64,26,0.1)" stroke="#c8401a" stroke-width="0.8"/>
+      <text x="76" y="247" font-family="'DM Mono', monospace" font-size="7.5" fill="#c8401a" text-anchor="middle" font-weight="500">AKS</text>
+
+      <!-- GPU/AI -->
+      <circle cx="246" cy="244" r="16" fill="rgba(26,92,200,0.1)" stroke="#1a5cc8" stroke-width="0.8"/>
+      <text x="246" y="241" font-family="'DM Mono', monospace" font-size="6.5" fill="#1a5cc8" text-anchor="middle" font-weight="500">GPU</text>
+      <text x="246" y="251" font-family="'DM Mono', monospace" font-size="6.5" fill="#1a5cc8" text-anchor="middle">/ AI</text>
+
+      <!-- Connector lines from center to inner nodes -->
+      <line x1="160" y1="124" x2="160" y2="94" stroke="#d4cec3" stroke-width="0.8"/>
+      <line x1="196" y1="148" x2="226" y2="148" stroke="#d4cec3" stroke-width="0.8"/>
+      <line x1="160" y1="196" x2="160" y2="226" stroke="#d4cec3" stroke-width="0.8"/>
+      <line x1="124" y1="148" x2="94" y2="148" stroke="#d4cec3" stroke-width="0.8"/>
+    </svg>
+  </div>
+</section>
+
+<!-- ── SKILLS TICKER ── -->
+<div class="skills-band">
+  <div class="skills-label">Core skills</div>
+  <div style="overflow:hidden;flex:1;display:flex">
+    <div class="skills-scroll">
+      <span class="accent">Kubernetes</span>
+      <span>OpenShift</span>
+      <span>EKS / GKE / AKS</span>
+      <span class="accent">Cilium</span>
+      <span>Tetragon</span>
+      <span class="accent">Istio</span>
+      <span>Service Mesh</span>
+      <span class="accent">Envoy</span>
+      <span>NGINX</span>
+      <span>API Gateway</span>
+      <span class="accent">vCluster</span>
+      <span>vNode</span>
+      <span>KubeVirt</span>
+      <span>Nvidia BCM/DGX</span>
+      <span class="accent">Run:ai</span>
+      <span>GPU Operator</span>
+      <span>OAuth2 / OIDC</span>
+      <span>PKI / mTLS</span>
+      <span>Bazel</span>
+      <span class="accent">OSS Contributor</span>
+      <!-- dupe for seamless loop -->
+      <span class="accent">Kubernetes</span>
+      <span>OpenShift</span>
+      <span>EKS / GKE / AKS</span>
+      <span class="accent">Cilium</span>
+      <span>Tetragon</span>
+      <span class="accent">Istio</span>
+      <span>Service Mesh</span>
+      <span class="accent">Envoy</span>
+      <span>NGINX</span>
+      <span>API Gateway</span>
+      <span class="accent">vCluster</span>
+      <span>vNode</span>
+      <span>KubeVirt</span>
+      <span>Nvidia BCM/DGX</span>
+      <span class="accent">Run:ai</span>
+      <span>GPU Operator</span>
+      <span>OAuth2 / OIDC</span>
+      <span>PKI / mTLS</span>
+      <span>Bazel</span>
+      <span class="accent">OSS Contributor</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── HIGHLIGHTS ── -->
+<div class="highlight-strip">
+  <div class="highlight-cell">
+    <div class="highlight-tag">Strategic wins</div>
+    <div class="highlight-num">OpenAI<span>.</span></div>
+    <div class="highlight-desc">Landed Cilium at OpenAI while at Isovalent/Cisco. Also closed Snowflake on Tetragon and Adobe across multiple engagements.</div>
+  </div>
+  <div class="highlight-cell">
+    <div class="highlight-tag">Scale</div>
+    <div class="highlight-num">~60<span>+</span></div>
+    <div class="highlight-desc">New customers closed in a single year as the first Solo.io Field Engineer. Owned the entire technical customer lifecycle solo.</div>
+  </div>
+  <div class="highlight-cell">
+    <div class="highlight-tag">Recognition</div>
+    <div class="highlight-num">#1<span>.</span></div>
+    <div class="highlight-desc">Ranked #1 in global Red Hat sales achievement FY2015, leading the OpenShift motion across the entire North America sales organization.</div>
+  </div>
+</div>
+
+<!-- ── EXPERIENCE ── -->
+<section class="experience" id="experience">
+  <div class="section-header">
+    <span class="section-label">Experience</span>
+    <span class="section-count">01 — 12</span>
+  </div>
+
+  <div class="job reveal">
+    <div class="job-meta">
+      <div class="job-company">vCluster Labs</div>
+      <div class="job-tenure">Apr 2025 – Mar 2026</div>
+      <div class="job-badge">Sales Engineering</div>
+    </div>
+    <div class="job-content">
+      <div class="job-title">Sales Engineer — vCluster, vNode &amp; vMetal</div>
+      <ul class="job-bullets">
+        <li>Supported three AEs covering strategic customers including <strong>Nvidia, HPE, Adobe,</strong> and <strong>FICO</strong></li>
+        <li>Drove successful POVs leading to initial contracts with <strong>Adobe, FICO,</strong> and <strong>Monash University</strong> (Nvidia partnership)</li>
+        <li>Authored the <strong>vCluster + Nvidia BCM/DGX</strong> and <strong>vCluster + Run:ai</strong> Reference Architectures</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="job reveal">
+    <div class="job-meta">
+      <div class="job-company">Isovalent / Cisco</div>
+      <div class="job-tenure">Dec 2023 – Apr 2025</div>
+      <div class="job-badge">Sales Engineering</div>
+    </div>
+    <div class="job-content">
+      <div class="job-title">Sales Engineer — Cilium &amp; Tetragon</div>
+      <ul class="job-bullets">
+        <li>Supported two AEs covering <strong>OpenAI, Snowflake, Adobe,</strong> and <strong>Wells Fargo</strong></li>
+        <li>Closed <strong>OpenAI</strong> on Cilium, <strong>Snowflake</strong> on Tetragon, and <strong>Adobe</strong> on Cilium through discovery-to-POV engagements</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="job reveal">
+    <div class="job-meta">
+      <div class="job-company">Solo.io</div>
+      <div class="job-tenure">May 2022 – Nov 2023</div>
+      <div class="job-badge">Field Engineering</div>
+    </div>
+    <div class="job-content">
+      <div class="job-title">Field Engineer — Gloo Edge &amp; Istio</div>
+      <ul class="job-bullets">
+        <li>Primary technical resource for Solo's two largest customers: <strong>American Express</strong> and <strong>T-Mobile</strong></li>
+        <li>Resolved the full range of production technical issues across API gateway and service mesh deployments</li>
+        <li><strong>Mentor</strong> for Field Engineers, Consultants, and Customer Service Engineers — specializing in Envoy</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="job reveal">
+    <div class="job-meta">
+      <div class="job-company">Kong</div>
+      <div class="job-tenure">Jan 2021 – May 2022</div>
+      <div class="job-badge">Field Engineering</div>
+    </div>
+    <div class="job-content">
+      <div class="job-title">Principal Field Engineer — Kuma/KongMesh &amp; KongGateway</div>
+      <ul class="job-bullets">
+        <li><strong>First Principal Field Engineer</strong> (post-sales) at Kong</li>
+        <li>Primary technical resource for Kuma/Kong Mesh; led multiple successful mesh and gateway engagements</li>
+        <li>Primary Statement of Work (SoW) technical author</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="job reveal">
+    <div class="job-meta">
+      <div class="job-company">Solo.io</div>
+      <div class="job-tenure">Nov 2020 – Nov 2021</div>
+      <div class="job-badge red">First hire</div>
+    </div>
+    <div class="job-content">
+      <div class="job-title">Field Engineer — Gloo Edge &amp; Istio</div>
+      <ul class="job-bullets">
+        <li><strong>First Solo Field Engineer</strong> — owned all prospect and customer-facing technical work</li>
+        <li>From POCs to production support, covering the complete technical lifecycle</li>
+        <li>Closed approximately <strong>60 new customers</strong> in one year</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="job reveal">
+    <div class="job-meta">
+      <div class="job-company">Red Hat</div>
+      <div class="job-tenure">Jun 2015 – Oct 2020</div>
+      <div class="job-badge">Software Engineering</div>
+    </div>
+    <div class="job-content">
+      <div class="job-title">Principal Software Engineer — Istio &amp; Cloud Enablement</div>
+      <ul class="job-bullets">
+        <li>Created Istio images for OpenShift with focus on <strong>Envoy, Bazel,</strong> and SSL (OpenSSL vs BoringSSL)</li>
+        <li>Built OpenShift container images for the entire <strong>JBoss portfolio</strong> — security, clustering, logging</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="job reveal">
+    <div class="job-meta">
+      <div class="job-company">Red Hat</div>
+      <div class="job-tenure">Dec 2012 – Jun 2015</div>
+      <div class="job-badge red">#1 Global Sales '15</div>
+    </div>
+    <div class="job-content">
+      <div class="job-title">Senior Solutions Architect — Middleware / Cloud</div>
+      <ul class="job-bullets">
+        <li>Covered <strong>American Express, Intuit,</strong> and other major accounts; consistently exceeded quarterly and annual targets</li>
+        <li><strong>Leadership role</strong> for OpenShift across entire North America sales organization</li>
+        <li>Ranked <strong>#1 in Global Sales in 2015</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="job reveal">
+    <div class="job-meta">
+      <div class="job-company">Red Hat</div>
+      <div class="job-tenure">Jun 2011 – Dec 2012</div>
+      <div class="job-badge">Software Engineering</div>
+    </div>
+    <div class="job-content">
+      <div class="job-title">Principal Software Engineer — OpenShift</div>
+      <ul class="job-bullets">
+        <li>Created <strong>OpenShift V2 cartridges</strong> for the entire JBoss portfolio</li>
+        <li>Led OpenShift open source community — conference speaking, blogging, community forums, IRC</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="job reveal">
+    <div class="job-meta">
+      <div class="job-company">Red Hat</div>
+      <div class="job-tenure">Apr 2009 – Jun 2011</div>
+      <div class="job-badge">Solutions Architecture</div>
+    </div>
+    <div class="job-content">
+      <div class="job-title">Senior Solutions Architect — Middleware</div>
+      <ul class="job-bullets">
+        <li>Covered <strong>Disney, DreamWorks, Intuit,</strong> and other major accounts</li>
+        <li>Leadership role for JBoss middleware across the entire North America sales organization</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="job reveal">
+    <div class="job-meta">
+      <div class="job-company">JBoss / Red Hat</div>
+      <div class="job-tenure">Apr 2005 – Apr 2008</div>
+      <div class="job-badge">Software Engineering</div>
+    </div>
+    <div class="job-content">
+      <div class="job-title">Principal Software Engineer — EJB3 / Application Server</div>
+      <ul class="job-bullets">
+        <li>Core developer on <strong>JBoss EJB3</strong> team — authored jboss.xml schema, deployment descriptor augmentations, full MDB integration to JBoss JMS JCA adaptor</li>
+        <li>Instructor for JBoss training: Intro to JEE, Advanced JEE, and custom courses</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="job reveal">
+    <div class="job-meta">
+      <div class="job-company">Earlier roles</div>
+      <div class="job-tenure">1991 – 2005</div>
+      <div class="job-badge">Engineering &amp; Research</div>
+    </div>
+    <div class="job-content">
+      <div class="job-title">MITRE · Cyclone Commerce · Eigner · Inso/Adobe · MIT Lincoln Lab</div>
+      <ul class="job-bullets">
+        <li><strong>MIT Lincoln Laboratory</strong> — implemented and trained a neural network to differentiate ballistic missile warheads from decoys using radar data; developed ray-tracing surface area visualization tool</li>
+        <li><strong>Cyclone Commerce</strong> — Technical Lead across Monsoon Project and Cyclone Interchange; Senior Consultant</li>
+        <li><strong>Pili Consulting</strong> — Founded LLC; led Wells Fargo mortgage platform migration from WebLogic to JBoss</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ── TECHNOLOGY ── -->
+<section class="tech-section" id="technology">
+  <div class="section-header">
+    <span class="section-label">Technology</span>
+    <span class="section-count">02 — 04</span>
+  </div>
+  <div class="tech-grid">
+    <div class="tech-cell reveal">
+      <div class="tech-category">Orchestration</div>
+      <div class="tech-name">Kubernetes</div>
+      <div class="tech-sub">OSS, OpenShift, EKS, GKE, AKS, vCluster, vNode, vMetal</div>
+    </div>
+    <div class="tech-cell reveal">
+      <div class="tech-category">Networking / CNI</div>
+      <div class="tech-name">Cilium</div>
+      <div class="tech-sub">Tetragon, eBPF, network policy, observability, runtime security</div>
+    </div>
+    <div class="tech-cell reveal">
+      <div class="tech-category">Service Mesh</div>
+      <div class="tech-name">Istio</div>
+      <div class="tech-sub">Kuma/KongMesh, mTLS, traffic management, OSS contributor</div>
+    </div>
+    <div class="tech-cell reveal">
+      <div class="tech-category">Proxy / Gateway</div>
+      <div class="tech-name">Envoy</div>
+      <div class="tech-sub">Gloo Edge, NGINX, KongGateway, OSS contributor</div>
+    </div>
+    <div class="tech-cell reveal">
+      <div class="tech-category">GPU / AI Infra</div>
+      <div class="tech-name">Nvidia</div>
+      <div class="tech-sub">BCM/DGX, GPU Operator, Run:ai, Google TPU</div>
+    </div>
+    <div class="tech-cell reveal">
+      <div class="tech-category">Virtualization</div>
+      <div class="tech-name">KubeVirt</div>
+      <div class="tech-sub">VM workloads on Kubernetes, vCluster reference architectures</div>
+    </div>
+    <div class="tech-cell reveal">
+      <div class="tech-category">Security</div>
+      <div class="tech-name">OAuth2 / OIDC</div>
+      <div class="tech-sub">PKI, mTLS, BoringSSL, OpenSSL, zero-trust patterns</div>
+    </div>
+    <div class="tech-cell reveal">
+      <div class="tech-category">Runtimes / Build</div>
+      <div class="tech-name">JBoss / Java EE</div>
+      <div class="tech-sub">EJB3, JMS, JCA, Bazel, OpenShift V2 cartridges</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── EDUCATION ── -->
+<section class="education" id="education">
+  <div style="grid-column:1/-1">
+    <div class="section-header">
+      <span class="section-label">Education</span>
+      <span class="section-count">03 — 04</span>
+    </div>
+  </div>
+  <div class="edu-cell reveal">
+    <div class="edu-degree">M.S. Computer<br>Science</div>
+    <div class="edu-school">University of Massachusetts — 1995</div>
+    <div class="edu-note">Concentrations in Operating Systems and Artificial Intelligence / Neural Networks. Coursework in Software Engineering, Networking, Graphics, and Distributed Object-Based Computing.</div>
+  </div>
+  <div class="edu-cell reveal">
+    <div class="edu-degree">B.S. Computer<br>Science</div>
+    <div class="edu-school">University of Massachusetts — 1991</div>
+    <div class="edu-note">Foundation in computer science with early applied research at MIT Lincoln Laboratory — implementing neural networks for ballistic missile discrimination using radar signature analysis.</div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-name">William (Bill) DeCoste</div>
+  <div class="footer-links">
+    <a href="mailto:bdecoste@gmail.com">bdecoste@gmail.com</a>
+    <a href="tel:9782040920">978-204-0920</a>
+    <a href="https://linkedin.com/in/bill-decoste-6b6ba8" target="_blank">LinkedIn</a>
+    <span style="font-size:11px;color:var(--rule)">San Diego, CA</span>
+  </div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 60);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
