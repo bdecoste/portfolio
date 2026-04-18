@@ -1,2 +1,1 @@
-[View Portfolio]
-(./portfolio.html) 
+[View Portfolio](./portfolio.html) 
